@@ -3,7 +3,7 @@ var BT_SHEET_NAME = "Jira開單備份";
 var BT_DEFAULT_JIRA_BASE_URL = "https://mgbilibili.atlassian.net";
 var BT_DEFAULT_JIRA_PROJECT_KEY = "UD";
 var BT_DEFAULT_JIRA_ISSUE_TYPE = "Task";
-var BT_APP_VERSION = "20260721-0800-fixed-row-height";
+var BT_APP_VERSION = "20260721-0920-forced-row-height";
 var BT_ERROR_SHEET_NAME = "Apps Script錯誤紀錄";
 var BT_TEMPLATE_ROW = 2;
 var BT_FIRST_SYSTEM_ROW = 3;
@@ -276,7 +276,7 @@ function appendPayloadByHeaders_(sheet, payload) {
   var nextRow = Math.max(sheet.getLastRow() + 1, BT_FIRST_SYSTEM_ROW);
   applyTemplateRowRules_(sheet, nextRow, columnCount);
   setRowValuesIgnoringValidation_(sheet, nextRow, columnCount, row);
-  sheet.setRowHeight(nextRow, BT_DATA_ROW_HEIGHT);
+  sheet.setRowHeightsForced(nextRow, 1, BT_DATA_ROW_HEIGHT);
 }
 
 function setRowValuesIgnoringValidation_(sheet, rowNumber, columnCount, rowValues) {
@@ -767,7 +767,7 @@ function applySheetFormatting_(sheet) {
   sheet.getRange(1, 1, Math.max(sheet.getLastRow(), 2), columnCount).setWrap(true);
   sheet.getRange(1, 1, maxRows, columnCount).setVerticalAlignment("middle");
   sheet.setRowHeight(1, BT_HEADER_ROW_HEIGHT);
-  sheet.setRowHeights(2, maxRows - 1, BT_DATA_ROW_HEIGHT);
+  sheet.setRowHeightsForced(2, maxRows - 1, BT_DATA_ROW_HEIGHT);
 
   var headers = sheet.getRange(1, 1, 1, columnCount).getValues()[0];
   for (var index = 0; index < columnCount; index += 1) {
