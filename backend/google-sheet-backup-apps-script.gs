@@ -3,12 +3,12 @@ var BT_SHEET_NAME = "Jira開單備份";
 var BT_DEFAULT_JIRA_BASE_URL = "https://mgbilibili.atlassian.net";
 var BT_DEFAULT_JIRA_PROJECT_KEY = "UD";
 var BT_DEFAULT_JIRA_ISSUE_TYPE = "Task";
-var BT_APP_VERSION = "20260721-0100-private-sheet-target";
+var BT_APP_VERSION = "20260721-0800-fixed-row-height";
 var BT_ERROR_SHEET_NAME = "Apps Script錯誤紀錄";
 var BT_TEMPLATE_ROW = 2;
 var BT_FIRST_SYSTEM_ROW = 3;
 var BT_HEADER_ROW_HEIGHT = 25;
-var BT_DATA_ROW_HEIGHT = 100;
+var BT_DATA_ROW_HEIGHT = 80;
 
 var BT_ASSIGNEE_OPTIONS = ["未指派", "Momo", "Pen", "Tracy", "Sushi"];
 var BT_REQUEST_STATUS_OPTIONS = ["未處理", "UI處理中", "運營審核中", "技術開發中", "已完成"];
