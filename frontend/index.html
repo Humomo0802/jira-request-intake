@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Jira 需求開單系統</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="rail" aria-label="開單流程">
+        <div class="brand">
+          <div class="brand-mark">J</div>
+          <div>
+            <h1>Jira 需求開單</h1>
+            <p>設計需求表單</p>
+          </div>
+        </div>
+
+        <nav class="steps" aria-label="流程">
+          <a href="#base" class="step is-active"><span>1</span>基本資料</a>
+          <a href="#detail" class="step"><span>2</span>場景內容</a>
+          <a href="#assets" class="step"><span>3</span>參考資料</a>
+          <a href="#preview" class="step"><span>4</span>Jira 預覽</a>
+        </nav>
+
+        <div class="rail-note">
+          <strong>導入方式</strong>
+          <p>送出後會由 Apps Script 建立 Jira 工單，並同步備份到 Google Sheet。</p>
+        </div>
+      </aside>
+
+      <main class="workspace">
+        <section class="toolbar">
+          <div>
+            <p class="eyebrow">Request Intake</p>
+            <h2>建立設計需求</h2>
+          </div>
+          <div class="toolbar-actions">
+            <button class="ghost-button" id="loadSample" type="button">載入範例</button>
+            <button class="ghost-button" id="resetForm" type="button">清空</button>
+          </div>
+        </section>
+
+        <div class="content-grid">
+          <form class="form-panel" id="ticketForm">
+            <section class="form-section" id="base">
+              <div class="section-heading">
+                <span>01</span>
+                <div>
+                  <h3>基本資料</h3>
+                  <p>這些欄位會轉成 Jira Summary、Label、Due Date。</p>
+                </div>
+              </div>
+
+              <div class="field-grid two">
+                <label>
+                  <span>需求人</span>
+                  <input name="requester" required placeholder="例如：Annie" />
+                </label>
+                <label>
+                  <span>單位</span>
+                  <select name="department" required>
+                    <option value="">請選擇</option>
+                    <option>運營</option>
+                    <option>代理</option>
+                    <option>PM</option>
+                    <option>主播</option>
+                  </select>
+                </label>
+                <label>
+                  <span>平台</span>
+                  <select name="platform" required>
+                    <option value="">請選擇</option>
+                    <option>YY</option>
+                    <option>BB</option>
+                    <option>其他</option>
+                  </select>
+                </label>
+                <label>
+                  <span>需求類型</span>
+                  <select name="requestType" required>
+                    <option value="">請選擇</option>
+                    <option>新增</option>
+                    <option>調整</option>
+                    <option>換皮</option>
+                  </select>
+                </label>
+              </div>
+
+              <label>
+                <span>需求抬頭</span>
+                <input name="title" required placeholder="例如：0613-14 樂享首單包賠" />
+              </label>
+
+              <div class="field-grid three">
+                <label>
+                  <span>需求場景</span>
+                  <select name="scenario" id="scenario" required>
+                    <option value="直播間素材">直播間素材</option>
+                    <option value="代理">代理</option>
+                    <option value="直播間封面">直播間封面</option>
+                    <option value="直播間背板">直播間背板</option>
+                    <option value="活動">活動</option>
+                    <option value="僅活動配置圖">僅活動配置圖</option>
+                    <option value="燈牌">燈牌</option>
+                    <option value="彈窗">彈窗</option>
+                    <option value="其他">其他</option>
+                  </select>
+                </label>
+                <label>
+                  <span>張數</span>
+                  <input name="quantity" type="number" min="1" required placeholder="1" />
+                </label>
+                <label>
+                  <span>優先級</span>
+                  <select name="priority">
+                    <option>一般</option>
+                    <option>高</option>
+                    <option>緊急</option>
+                  </select>
+                </label>
+              </div>
+
+              <div class="field-grid two">
+                <label>
+                  <span>期望 UI 交付日期</span>
+                  <input name="uiDueDate" type="date" required />
+                </label>
+                <label>
+                  <span>期望功能上線日</span>
+                  <input name="onlineDate" type="date" />
+                </label>
+              </div>
+
+              <label>
+                <span>需求說明</span>
+                <textarea name="summary" rows="4" required placeholder="請說明這次要做什麼、為什麼做、希望怎麼呈現。"></textarea>
+              </label>
+            </section>
+
+            <section class="form-section" id="detail">
+              <div class="section-heading">
+                <span>02</span>
+                <div>
+                  <h3>場景內容</h3>
+                  <p>依需求場景自動顯示對應欄位。</p>
+                </div>
+              </div>
+
+              <div id="scenarioFields"></div>
+            </section>
+
+            <section class="form-section" id="assets">
+              <div class="section-heading">
+                <span>03</span>
+                <div>
+                  <h3>參考資料</h3>
+                  <p>填入參考連結，並上傳圖片、文件或素材檔案。</p>
+                </div>
+              </div>
+
+              <div class="field-grid two">
+                <label>
+                  <span>素材或附件</span>
+                  <input name="assetLink" placeholder="Drive / 圖片 / 主播照" />
+                </label>
+                <label>
+                  <span>Figma</span>
+                  <input name="figmaLink" placeholder="Figma 設計稿或參考" />
+                </label>
+                <label>
+                  <span>相關 Jira</span>
+                  <input name="relatedJira" placeholder="例如：YY1-1234" />
+                </label>
+                <label>
+                  <span>舊圖 / 舊活動</span>
+                  <input name="legacyRef" placeholder="舊模板或參考活動" />
+                </label>
+              </div>
+
+              <div class="upload-area">
+                <div>
+                  <span class="upload-title">參考檔案</span>
+                  <p>可選擇圖片、文件、壓縮檔或素材檔。正式串接後會由後端上傳到 Jira 附件。</p>
+                </div>
+                <label class="upload-button">
+                  <input id="referenceFiles" name="referenceFiles" type="file" multiple />
+                  選擇檔案
+                </label>
+              </div>
+
+              <ul class="file-list" id="fileList">
+                <li>尚未選擇檔案</li>
+              </ul>
+
+              <label>
+                <span>備註</span>
+                <textarea name="notes" rows="3" placeholder="加急原因、特殊限制、審核需求。"></textarea>
+              </label>
+            </section>
+          </form>
+
+          <aside class="preview-panel" id="preview">
+            <div class="preview-header">
+              <div>
+                <p class="eyebrow">Jira Preview</p>
+                <h3>即時預覽</h3>
+              </div>
+              <span class="status-pill" id="completion">0% 完成</span>
+            </div>
+
+            <div class="jira-fields">
+              <div>
+                <span>Project</span>
+                <strong id="projectPreview">-</strong>
+              </div>
+              <div>
+                <span>Issue Type</span>
+                <strong id="issueTypePreview">Task</strong>
+              </div>
+              <div>
+                <span>Due Date</span>
+                <strong id="dueDatePreview">-</strong>
+              </div>
+            </div>
+
+            <section class="preview-block">
+              <label for="summaryPreview">Summary</label>
+              <textarea id="summaryPreview" readonly rows="2"></textarea>
+            </section>
+
+            <section class="preview-block">
+              <label for="descriptionPreview">Description</label>
+              <textarea id="descriptionPreview" readonly rows="18"></textarea>
+            </section>
+
+            <div class="validation-box" id="validationBox">
+              <strong>待補欄位</strong>
+              <ul id="missingList"></ul>
+            </div>
+
+            <button class="primary-button" id="submitTicket" type="button">建立 Jira 工單</button>
+
+            <div class="result-box" id="resultBox" hidden>
+              <span>送出完成</span>
+              <strong id="ticketKey">已送出建立請求</strong>
+              <a id="ticketUrl" href="#" target="_blank" rel="noreferrer">前往 Jira 專案</a>
+              <p id="backupStatus">送出狀態：待送出</p>
+            </div>
+          </aside>
+        </div>
+      </main>
+    </div>
+
+    <script src="./app.js?v=20260720-2100"></script>
+  </body>
+</html>
