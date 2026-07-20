@@ -1,9 +1,9 @@
-var BT_SPREADSHEET_ID = "13UkD5HXGKw3W1VpNm_6_dW1MDw2w6BbXmldZPowaerU";
+var BT_SPREADSHEET_ID = "1cHApcumQHJy22LELj3HW7Cp72UGGOipe";
 var BT_SHEET_NAME = "Jira開單備份";
 var BT_DEFAULT_JIRA_BASE_URL = "https://mgbilibili.atlassian.net";
 var BT_DEFAULT_JIRA_PROJECT_KEY = "UD";
 var BT_DEFAULT_JIRA_ISSUE_TYPE = "Task";
-var BT_APP_VERSION = "20260721-0045-safe-sheet-write";
+var BT_APP_VERSION = "20260721-0100-private-sheet-target";
 var BT_ERROR_SHEET_NAME = "Apps Script錯誤紀錄";
 var BT_TEMPLATE_ROW = 2;
 var BT_FIRST_SYSTEM_ROW = 3;

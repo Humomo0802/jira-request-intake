@@ -1,7 +1,7 @@
 # Google Sheet 備份設定
 
 目標備份表：
-https://docs.google.com/spreadsheets/d/13UkD5HXGKw3W1VpNm_6_dW1MDw2w6BbXmldZPowaerU/edit?usp=sharing
+https://docs.google.com/spreadsheets/d/1cHApcumQHJy22LELj3HW7Cp72UGGOipe/edit?gid=302943182#gid=302943182
 
 ## 設定步驟
 

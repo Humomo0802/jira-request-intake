@@ -56,7 +56,7 @@ push 到 main
 目前期望版本：
 
 ```text
-20260721-0045-safe-sheet-write
+20260721-0100-private-sheet-target
 ```
 
 ## Google Sheet

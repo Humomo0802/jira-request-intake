@@ -59,7 +59,7 @@ backend/google-sheet-backup-apps-script.gs
 目前後端版本：
 
 ```text
-20260721-0045-safe-sheet-write
+20260721-0100-private-sheet-target
 ```
 
 ## 重要提醒
