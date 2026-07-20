@@ -3,7 +3,7 @@ var BT_SHEET_NAME = "Jira開單備份";
 var BT_DEFAULT_JIRA_BASE_URL = "https://mgbilibili.atlassian.net";
 var BT_DEFAULT_JIRA_PROJECT_KEY = "UD";
 var BT_DEFAULT_JIRA_ISSUE_TYPE = "Task";
-var BT_APP_VERSION = "20260720-2155-fix-quantity-number-format";
+var BT_APP_VERSION = "20260720-2355-fix-full-row-alignment";
 var BT_TEMPLATE_ROW = 2;
 var BT_FIRST_SYSTEM_ROW = 3;
 var BT_HEADER_ROW_HEIGHT = 25;
@@ -89,6 +89,12 @@ function doPost(e) {
 
   payload.assignee = "未指派";
   payload.requestStatus = "未處理";
+  payload.sheetRecord = payload.sheetRecord || {};
+  payload.sheetRecord["Jira單號"] = payload.jiraKey || "";
+  payload.sheetRecord["Jira連結"] = payload.jiraUrl || "";
+  payload.sheetRecord["負責人"] = "未指派";
+  payload.sheetRecord["備註"] = payload.notes || "";
+  payload.sheetRecord["需求狀態"] = "未處理";
 
   appendPayloadByHeaders_(sheet, payload);
   repairSheetData_(sheet);
@@ -585,9 +591,8 @@ function repairMisalignedRows_(sheet) {
   var assigneeIndex = sheetColumnIndex_(sheet, "負責人");
   var projectIndex = sheetColumnIndex_(sheet, "Jira專案");
   var issueTypeIndex = sheetColumnIndex_(sheet, "工單類型");
-  var onlineDateIndex = sheetColumnIndex_(sheet, "上線日期");
   var statusIndex = statusColumnIndex_(sheet);
-  if (assigneeIndex < 1 || projectIndex < 1 || issueTypeIndex < 1 || onlineDateIndex < 1 || statusIndex < 1) return;
+  if (assigneeIndex < 1 || projectIndex < 1 || issueTypeIndex < 1 || statusIndex < 1) return;
 
   var range = sheet.getRange(2, 1, lastRow - 1, lastColumn);
   var values = range.getValues();
@@ -599,7 +604,7 @@ function repairMisalignedRows_(sheet) {
     var project = rowValues[projectIndex - 1];
 
     if (isLikelyProjectKey_(assignee) && isLikelyIssueType_(project)) {
-      for (var col = onlineDateIndex - 1; col > assigneeIndex - 1; col -= 1) {
+      for (var col = statusIndex - 1; col > assigneeIndex - 1; col -= 1) {
         rowValues[col] = rowValues[col - 1];
       }
       rowValues[assigneeIndex - 1] = "未指派";

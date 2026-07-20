@@ -105,7 +105,7 @@ const ticketUrl = document.querySelector("#ticketUrl");
 const referenceFiles = document.querySelector("#referenceFiles");
 const fileList = document.querySelector("#fileList");
 const backupStatus = document.querySelector("#backupStatus");
-const GOOGLE_SHEET_BACKUP_URL = "https://script.google.com/macros/s/AKfycbxwD97TG6Jc3yDC-Ps7XqfSaK-ngzG19oKl8yHd466Z_-ZtzBi55ttOQ8SlzwJlgfAZIA/exec";
+const GOOGLE_SHEET_BACKUP_URL = "https://script.google.com/macros/s/AKfycbx_BRzcBnnLC8dydTgUBECc5p3KoHyhxp-b3NfThF4LfkZDQI0RZsC9L-_lXKDsqa_w/exec";
 let isSubmitting = false;
 let hasSubmitted = false;
 

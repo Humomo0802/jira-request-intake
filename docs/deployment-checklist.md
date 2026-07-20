@@ -39,14 +39,13 @@ https://humomo0802.github.io/jira-request-intake/
 backend/google-sheet-backup-apps-script.gs
 ```
 
-部署步驟：
+自動部署步驟：
 
 ```text
-部署
-→ 管理部署作業
-→ 編輯目前 Web App
-→ 版本選「新增版本」
-→ 部署
+push 到 main
+→ GitHub Actions 執行 clasp push
+→ 建立 Apps Script 版本
+→ redeploy 固定的正式 deployment
 ```
 
 確認方式：
@@ -57,7 +56,7 @@ backend/google-sheet-backup-apps-script.gs
 目前期望版本：
 
 ```text
-20260720-2155-fix-quantity-number-format
+20260720-2355-fix-full-row-alignment
 ```
 
 ## Google Sheet
@@ -107,4 +106,3 @@ JIRA_ISSUE_TYPE = Task
 ```text
 testJiraConnection
 ```
-

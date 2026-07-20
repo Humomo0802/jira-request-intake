@@ -59,18 +59,17 @@ backend/google-sheet-backup-apps-script.gs
 目前後端版本：
 
 ```text
-20260720-2155-fix-quantity-number-format
+20260720-2355-fix-full-row-alignment
 ```
 
 ## 重要提醒
 
 前端更新後，要上傳 GitHub Pages。
 
-後端更新後，要到 Google Apps Script：
+後端更新後推送到 `main`，GitHub Actions 會自動：
 
 ```text
-部署 → 管理部署作業 → 編輯 → 版本選新增版本 → 部署
+clasp push → 建立版本 → 更新既有 Web App deployment
 ```
 
-只修改 Apps Script 編輯器內容，不代表網站會立刻吃到新版。
-
+前端 URL 固定指向同一個 deployment，不需要隨後端版本修改。設定方式請參考 `docs/backend-auto-deploy-plan.md`。
