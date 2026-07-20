@@ -3,7 +3,8 @@ var BT_SHEET_NAME = "Jira開單備份";
 var BT_DEFAULT_JIRA_BASE_URL = "https://mgbilibili.atlassian.net";
 var BT_DEFAULT_JIRA_PROJECT_KEY = "UD";
 var BT_DEFAULT_JIRA_ISSUE_TYPE = "Task";
-var BT_APP_VERSION = "20260720-2355-fix-full-row-alignment";
+var BT_APP_VERSION = "20260721-0045-safe-sheet-write";
+var BT_ERROR_SHEET_NAME = "Apps Script錯誤紀錄";
 var BT_TEMPLATE_ROW = 2;
 var BT_FIRST_SYSTEM_ROW = 3;
 var BT_HEADER_ROW_HEIGHT = 25;
@@ -63,6 +64,19 @@ function doGet() {
 }
 
 function doPost(e) {
+  try {
+    return handlePost_(e);
+  } catch (error) {
+    logPostError_(error);
+    return jsonOutput_({
+      ok: false,
+      version: BT_APP_VERSION,
+      error: error && error.message ? error.message : String(error)
+    });
+  }
+}
+
+function handlePost_(e) {
   if (!e || !e.postData || !e.postData.contents) {
     setupHeaders();
     return jsonOutput_({ ok: true, message: "setupHeaders completed." });
@@ -261,8 +275,41 @@ function appendPayloadByHeaders_(sheet, payload) {
 
   var nextRow = Math.max(sheet.getLastRow() + 1, BT_FIRST_SYSTEM_ROW);
   applyTemplateRowRules_(sheet, nextRow, columnCount);
-  sheet.getRange(nextRow, 1, 1, columnCount).setValues([row]);
+  setRowValuesIgnoringValidation_(sheet, nextRow, columnCount, row);
   sheet.setRowHeight(nextRow, BT_DATA_ROW_HEIGHT);
+}
+
+function setRowValuesIgnoringValidation_(sheet, rowNumber, columnCount, rowValues) {
+  var range = sheet.getRange(rowNumber, 1, 1, columnCount);
+  var validations = range.getDataValidations();
+  range.clearDataValidations();
+
+  try {
+    range.setValues([rowValues]);
+  } finally {
+    range.setDataValidations(validations);
+  }
+}
+
+function logPostError_(error) {
+  try {
+    var spreadsheet = SpreadsheetApp.openById(BT_SPREADSHEET_ID);
+    var sheet = spreadsheet.getSheetByName(BT_ERROR_SHEET_NAME) || spreadsheet.insertSheet(BT_ERROR_SHEET_NAME);
+
+    if (sheet.getLastRow() === 0) {
+      sheet.appendRow(["發生時間", "版本", "錯誤訊息", "Stack"]);
+      sheet.setFrozenRows(1);
+    }
+
+    sheet.appendRow([
+      new Date(),
+      BT_APP_VERSION,
+      error && error.message ? error.message : String(error),
+      error && error.stack ? error.stack : ""
+    ]);
+  } catch (loggingError) {
+    console.error(loggingError);
+  }
 }
 
 function buildSheetRecordFromPayload_(payload) {

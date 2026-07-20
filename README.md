@@ -59,7 +59,7 @@ backend/google-sheet-backup-apps-script.gs
 目前後端版本：
 
 ```text
-20260720-2355-fix-full-row-alignment
+20260721-0045-safe-sheet-write
 ```
 
 ## 重要提醒

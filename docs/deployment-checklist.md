@@ -56,7 +56,7 @@ push 到 main
 目前期望版本：
 
 ```text
-20260720-2355-fix-full-row-alignment
+20260721-0045-safe-sheet-write
 ```
 
 ## Google Sheet
