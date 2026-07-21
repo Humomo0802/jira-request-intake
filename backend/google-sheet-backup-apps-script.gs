@@ -3,7 +3,7 @@ var BT_SHEET_NAME = "Jira開單備份";
 var BT_DEFAULT_JIRA_BASE_URL = "https://mgbilibili.atlassian.net";
 var BT_DEFAULT_JIRA_PROJECT_KEY = "UD";
 var BT_DEFAULT_JIRA_ISSUE_TYPE = "Task";
-var BT_APP_VERSION = "20260721-0920-forced-row-height";
+var BT_APP_VERSION = "20260721-1540-colored-dropdown-chips";
 var BT_ERROR_SHEET_NAME = "Apps Script錯誤紀錄";
 var BT_TEMPLATE_ROW = 2;
 var BT_FIRST_SYSTEM_ROW = 3;
@@ -823,9 +823,11 @@ function applyDropdownValidation_(sheet, label, options) {
 
   var maxRows = Math.max(sheet.getMaxRows(), 1000);
   var range = sheet.getRange(2, index, maxRows - 1, 1);
-  var existingValidation = sheet.getRange(2, index).getDataValidation();
+  var templateCell = sheet.getRange(BT_TEMPLATE_ROW, index);
+  var existingValidation = templateCell.getDataValidation();
 
   if (existingValidation) {
+    templateCell.copyTo(range, SpreadsheetApp.CopyPasteType.PASTE_DATA_VALIDATION, false);
     return;
   }
 
